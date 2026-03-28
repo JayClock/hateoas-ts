@@ -1,6 +1,6 @@
 import { Entity, Resource, State } from '@hateoas-ts/resource';
 import { ResourceLike } from './use-resolve-resource';
-import { useReadResource } from './use-read-resource';
+import { useReadResource, UseReadResourceOptions } from './use-read-resource';
 
 /**
  * The result of a useResource hook.
@@ -32,6 +32,7 @@ export type UseResourceResponse<T extends Entity> = {
  *
  * @category Hooks
  * @param resourceLike - A Resource, ResourceRelation, or URI string
+ * @param options - Read options such as initial state, stale refresh behavior, and initial request headers
  * @returns Loading state, error, and resource data
  *
  * @example
@@ -62,6 +63,7 @@ export type UseResourceResponse<T extends Entity> = {
  */
 export function useResource<T extends Entity>(
   resourceLike: ResourceLike<T>,
+  options: UseReadResourceOptions<T> = {},
 ): UseResourceResponse<T> {
   if (resourceLike === undefined) {
     console.warn(
@@ -69,7 +71,7 @@ export function useResource<T extends Entity>(
     );
   }
   const { resourceState, loading, error, resource } =
-    useReadResource<T>(resourceLike);
+    useReadResource<T>(resourceLike, options);
 
   return {
     loading,

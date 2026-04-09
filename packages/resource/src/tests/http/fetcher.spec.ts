@@ -8,6 +8,7 @@ import { ClientInstance } from '../../lib/client-instance.js';
 import { acceptMiddleware } from '../../lib/middlewares/accept-header.js';
 import { cacheMiddleware } from '../../lib/middlewares/cache.js';
 import { State } from '../../lib/index.js';
+import { Transport } from '../../lib/transport/transport.js';
 
 describe('Fetcher', () => {
   let fetcher: Fetcher;
@@ -29,6 +30,25 @@ describe('Fetcher', () => {
   describe('constructor', () => {
     it('should create a fetcher instance with empty middlewares', () => {
       expect(fetcher.middlewares).toEqual([]);
+    });
+  });
+
+  describe('transport', () => {
+    it('should use custom transport when configured', async () => {
+      const execute = vi.fn(async () => new Response('transport response'));
+      const transport: Transport = { execute };
+      const transportFetcher = new Fetcher({
+        ...mockConfig,
+        transport,
+      });
+
+      const response = await transportFetcher.fetchOrThrow(
+        'https://api.example.com/test',
+      );
+
+      expect(response).toBeInstanceOf(Response);
+      expect(execute).toHaveBeenCalledTimes(1);
+      expect(mockFetch).not.toHaveBeenCalled();
     });
   });
 

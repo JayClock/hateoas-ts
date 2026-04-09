@@ -38,6 +38,7 @@ export * from './resource/resource-relation.js';
 export * from './links/link.js';
 export * from './links/links.js';
 export * from './cache/index.js';
+export * from './transport/transport.js';
 export { basicAuth } from './http/basic-auth.js';
 export { bearerAuth } from './http/bearer-auth.js';
 export type { FetchMiddleware } from './http/fetcher.js';

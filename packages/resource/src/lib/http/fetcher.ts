@@ -2,6 +2,7 @@ import problemFactory from './error.js';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../archtype/injection-types.js';
 import type { Config } from '../archtype/config.js';
+import { HttpTransport } from '../transport/transport.js';
 
 /**
  * Middleware function for intercepting and modifying HTTP requests/responses.
@@ -45,8 +46,11 @@ export class Fetcher {
    * Registered middlewares as [pattern, middleware] pairs.
    */
   middlewares: [RegExp, FetchMiddleware][] = [];
+  private readonly transport;
 
-  constructor(@inject(TYPES.Config) private config: Config) {}
+  constructor(@inject(TYPES.Config) private config: Config) {
+    this.transport = this.config.transport ?? new HttpTransport();
+  }
 
   /**
    * Performs an HTTP request with middleware processing.
@@ -76,7 +80,7 @@ export class Fetcher {
         );
       }
 
-      return fetch(innerRequest);
+      return this.transport.execute(innerRequest);
     });
 
     return invokeMiddlewares(mws, request);

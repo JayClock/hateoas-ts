@@ -30,8 +30,7 @@ type StateInit<TEntity extends Entity> = {
 } & HeadStateInit<TEntity>;
 
 export class BaseHeadState<TEntity extends Entity>
-  implements HeadState<TEntity>
-{
+  implements HeadState<TEntity> {
   readonly uri: string;
   readonly client: ClientInstance;
   readonly links: Links<TEntity['links']>;
@@ -50,7 +49,7 @@ export class BaseHeadState<TEntity extends Entity>
     if (link.hints?.status !== 'deprecated') {
       return;
     }
-     
+
     console.warn(
       `[Resource] The ${link.rel} link on ${this.uri} is marked deprecated.`,
       link,
@@ -63,6 +62,10 @@ export class BaseHeadState<TEntity extends Entity>
 
   getLink<K extends keyof TEntity['links']>(rel: K): Link | undefined {
     return this.links.get(rel as string);
+  }
+
+  equalTo(state: State<SafeAny>): boolean {
+    return this.uri === state.uri;
   }
 
   protected isBuffer(data: SafeAny): data is Buffer {
@@ -129,8 +132,7 @@ export class BaseHeadState<TEntity extends Entity>
 
 export class BaseState<TEntity extends Entity>
   extends BaseHeadState<TEntity>
-  implements State<TEntity>
-{
+  implements State<TEntity> {
   readonly data: TEntity['data'];
   readonly collection: StateCollection<TEntity>;
   readonly isPartial: boolean;

@@ -5,6 +5,7 @@ import { Resource } from '../index.js';
 import { Link, LinkVariables } from '../links/link.js';
 import { Links } from '../links/links.js';
 import { Action } from '../action/action.js';
+import { SafeAny } from '../archtype/safe-any.js';
 
 /**
  * Represents the metadata-only state of a resource from a HEAD response.
@@ -23,6 +24,11 @@ export type HeadState<TEntity extends Entity = Entity> = {
    * The URI associated with this head state
    */
   uri: string;
+
+  /**
+   * Compares this state with another state-like object by URI.
+   */
+  equalTo(state: State<SafeAny>): boolean;
 
   /**
    * Checks if a link with the given relation exists.
@@ -116,6 +122,11 @@ export type State<TEntity extends Entity = Entity> = {
    * The URI associated with this state
    */
   uri: string;
+
+  /**
+   * Compares this state with another state-like object by URI.
+   */
+  equalTo(state: State<SafeAny>): boolean;
 
   /**
    * Represents the body of the HTTP response.

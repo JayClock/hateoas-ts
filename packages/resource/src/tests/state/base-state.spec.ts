@@ -6,6 +6,7 @@ import { LinkNotFound } from '../../lib/links/link.js';
 import { ClientInstance } from '../../lib/client-instance.js';
 import { Form } from '../../lib/form/form.js';
 import { StateCollection } from '../../lib/state/state-collection.js';
+import { State } from '../../lib/state/state.js';
 import { Entity } from '../../lib/index.js';
 import { SafeAny } from '../../lib/archtype/safe-any.js';
 
@@ -168,6 +169,40 @@ describe('BaseState', () => {
     it('should return undefined for non-existing rel', () => {
       const unknownLink = state.getLink('unknown' as never);
       expect(unknownLink).toBeUndefined();
+    });
+  });
+
+  describe('equalTo', () => {
+    it('should return true when the other state has the same uri', () => {
+      const sameUriState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      expect(state.equalTo(sameUriState as unknown as State<SafeAny>)).toBe(
+        true,
+      );
+    });
+
+    it('should return false when the other state has a different uri', () => {
+      const differentUriState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink: {
+          rel: 'self',
+          href: '/api/resources/124',
+          context: mockClient.bookmarkUri,
+        },
+      });
+
+      expect(
+        state.equalTo(differentUriState as unknown as State<SafeAny>),
+      ).toBe(false);
     });
   });
 

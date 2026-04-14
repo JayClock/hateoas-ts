@@ -1,6 +1,7 @@
 import { Entity, Resource, State } from '@hateoas-ts/resource';
 import { use, useMemo } from 'react';
 import { ResourceLike } from './use-resolve-resource';
+import { UseReadResourceOptions } from './use-read-resource';
 import { useSuspenseResolveResource } from './use-suspense-resolve-resource';
 
 /**
@@ -26,10 +27,18 @@ export type UseSuspenseReadResourceResponse<T extends Entity> = {
  */
 export function useSuspenseReadResource<T extends Entity>(
   resourceLike: ResourceLike<T>,
+  options: UseReadResourceOptions<T> = {},
 ): UseSuspenseReadResourceResponse<T> {
   const resource = useSuspenseResolveResource(resourceLike);
+  const { initialState, initialGetRequestHeaders } = options;
 
-  const getPromise = useMemo(() => resource.get(), [resource]);
+  const getPromise = useMemo(() => {
+    if (initialState?.uri === resource.uri) {
+      return Promise.resolve(initialState);
+    }
+
+    return resource.get({ headers: initialGetRequestHeaders });
+  }, [initialGetRequestHeaders, initialState, resource]);
   const resourceState = use(getPromise);
 
   return {

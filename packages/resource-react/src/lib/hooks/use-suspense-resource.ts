@@ -1,5 +1,6 @@
 import { Entity, Resource, State } from '@hateoas-ts/resource';
 import { ResourceLike } from './use-resolve-resource';
+import { UseReadResourceOptions } from './use-read-resource';
 import { useSuspenseReadResource } from './use-suspense-read-resource';
 
 /**
@@ -25,6 +26,7 @@ export type UseSuspenseResourceResponse<T extends Entity> = {
  *
  * @category Suspense Hooks
  * @param resourceLike - A Resource, ResourceRelation, or URI string
+ * @param options - Read options such as initial state and initial request headers
  * @returns The resolved resource state, data, and resource object
  *
  * @example
@@ -58,8 +60,9 @@ export type UseSuspenseResourceResponse<T extends Entity> = {
  */
 export function useSuspenseResource<T extends Entity>(
   resourceLike: ResourceLike<T>,
+  options: UseReadResourceOptions<T> = {},
 ): UseSuspenseResourceResponse<T> {
-  const { resource, resourceState } = useSuspenseReadResource(resourceLike);
+  const { resource, resourceState } = useSuspenseReadResource(resourceLike, options);
 
   return {
     data: resourceState.data,

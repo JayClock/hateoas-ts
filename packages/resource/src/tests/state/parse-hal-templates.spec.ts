@@ -179,6 +179,45 @@ describe('parseHalTemplates', () => {
     });
   });
 
+  it('should preserve custom HAL-FORMS template members under form.extensions', () => {
+    const templates: Record<string, HalFormsTemplate> = {
+      moveCard: {
+        method: 'POST',
+        target: '/api/tasks/task-1/move',
+        properties: [],
+        'x-available': false,
+        'x-blockedBy': [
+          {
+            code: 'WIP_LIMIT_REACHED',
+            message: 'Target column is full',
+            recoverWith: ['move-card'],
+          },
+        ],
+        'x-effects': ['mayTriggerAutomation'],
+        'x-returns': {
+          resourceType: 'kanban.task',
+        },
+      } as HalFormsTemplate & Record<string, unknown>,
+    };
+
+    const forms = parseHalTemplates(mockLinks, templates);
+
+    expect(forms[0].extensions).toEqual({
+      'x-available': false,
+      'x-blockedBy': [
+        {
+          code: 'WIP_LIMIT_REACHED',
+          message: 'Target column is full',
+          recoverWith: ['move-card'],
+        },
+      ],
+      'x-effects': ['mayTriggerAutomation'],
+      'x-returns': {
+        resourceType: 'kanban.task',
+      },
+    });
+  });
+
   it('should handle empty templates object', () => {
     const forms = parseHalTemplates(mockLinks, {});
 

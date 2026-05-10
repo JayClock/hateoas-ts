@@ -2,6 +2,7 @@ import {
   HalFormsOptionsInline,
   HalFormsProperty,
   HalFormsSimpleProperty,
+  HalFormsTemplate,
   HalLink,
   HalResource,
 } from 'hal-types';
@@ -31,6 +32,14 @@ const HAL_FORMS_STANDARD_PROPERTY_KEYS = new Set([
   'options',
 ]);
 
+const HAL_FORMS_STANDARD_TEMPLATE_KEYS = new Set([
+  'title',
+  'method',
+  'target',
+  'contentType',
+  'properties',
+]);
+
 type HalCustomFields = Record<string, SafeAny>;
 
 export function isInlineOptions(
@@ -48,6 +57,35 @@ function extractHalCustomFields(halField: HalFormsProperty): HalCustomFields {
   }
 
   return customFields;
+}
+
+function extractHalTemplateCustomFields(
+  halTemplate: HalFormsTemplate,
+): HalCustomFields {
+  const customFields: HalCustomFields = {};
+
+  for (const [key, value] of Object.entries(halTemplate as Record<string, SafeAny>)) {
+    if (HAL_FORMS_STANDARD_TEMPLATE_KEYS.has(key)) continue;
+    customFields[key] = value;
+  }
+
+  return customFields;
+}
+
+function withHalTemplateCustomFields(
+  form: Form,
+  halTemplate: HalFormsTemplate,
+): Form {
+  const customFields = extractHalTemplateCustomFields(halTemplate);
+
+  if (!Object.keys(customFields).length) {
+    return form;
+  }
+
+  return {
+    ...form,
+    extensions: customFields,
+  };
 }
 
 function withHalCustomFields(field: Field, halField: HalFormsProperty): Field {
@@ -68,15 +106,20 @@ export function parseHalTemplates(
   templates: HalResource['_templates'] = {},
 ): Form[] {
   const selfHref = (links.get('self') as HalLink | undefined)?.href ?? '';
-  return Object.entries(templates).map(([key, template]) => ({
-    name: key,
-    title: template.title,
-    method: template.method as HttpMethod,
-    uri: resolve(links.defaultContext, template.target ?? selfHref),
-    contentType: template.contentType ?? 'application/json',
-    fields:
-      template.properties?.map((property) => parseHalField(property)) || [],
-  }));
+  return Object.entries(templates).map(([key, template]) =>
+    withHalTemplateCustomFields(
+      {
+        name: key,
+        title: template.title,
+        method: template.method as HttpMethod,
+        uri: resolve(links.defaultContext, template.target ?? selfHref),
+        contentType: template.contentType ?? 'application/json',
+        fields:
+          template.properties?.map((property) => parseHalField(property)) || [],
+      },
+      template,
+    ),
+  );
 }
 
 export function parseHalField(halField: HalFormsProperty): Field {

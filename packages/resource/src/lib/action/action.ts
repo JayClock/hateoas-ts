@@ -150,6 +150,7 @@ export class SimpleAction<TEntity extends Entity> implements Action<TEntity> {
   method: string;
   contentType: string;
   fields: Field[];
+  extensions?: Record<string, unknown>;
   formSchema: ActionFormSchema;
 
   constructor(
@@ -163,6 +164,7 @@ export class SimpleAction<TEntity extends Entity> implements Action<TEntity> {
     this.method = this.form.method;
     this.contentType = this.form.contentType;
     this.fields = this.form.fields;
+    this.extensions = this.form.extensions;
     this.formSchema = schemaPlugin.createSchema(this.fields);
   }
 

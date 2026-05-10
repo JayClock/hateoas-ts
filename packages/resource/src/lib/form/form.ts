@@ -41,4 +41,12 @@ export type Form = {
    * Available form fields.
    */
   fields: Field[];
+
+  /**
+   * Non-standard HAL-FORMS template members preserved from the backend.
+   *
+   * This is where control-plane hints such as x-available, x-blockedBy,
+   * x-effects, and x-returns are exposed without changing the HAL-FORMS shape.
+   */
+  extensions?: Record<string, unknown>;
 };

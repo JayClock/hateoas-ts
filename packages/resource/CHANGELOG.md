@@ -1,3 +1,7 @@
+## 1.4.1 (2026-05-22)
+
+This was a version bump only for @hateoas-ts/resource to align it with other projects, there were no code changes.
+
 # @hateoas-ts/resource Changelog
 
 All notable changes to this package are documented in this file.

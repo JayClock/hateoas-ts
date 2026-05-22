@@ -1,0 +1,655 @@
+import { beforeEach, describe, expect, vi } from 'vitest';
+import { BaseState } from '../../lib/state/base-state.js';
+import { Links } from '../../lib/links/links.js';
+import { Link } from '../../lib/links/link.js';
+import { LinkNotFound } from '../../lib/links/link.js';
+import { ClientInstance } from '../../lib/client-instance.js';
+import { Form } from '../../lib/form/form.js';
+import { StateCollection } from '../../lib/state/state-collection.js';
+import { State } from '../../lib/state/state.js';
+import { Entity } from '../../lib/index.js';
+import { SafeAny } from '../../lib/archtype/safe-any.js';
+
+const mockClient = {
+  bookmarkUri: 'https://example.com/',
+  go: vi.fn(),
+} as unknown as ClientInstance;
+
+type TestEntity = Entity<
+  {
+    id: string;
+    name: string;
+  },
+  {
+    self: TestEntity;
+    related: TestEntity;
+    edit: TestEntity;
+  }
+>;
+
+describe('BaseState', () => {
+  let mockLinks: Links<TestEntity['links']>;
+  let mockHeaders: Headers;
+  let mockForms: Form[];
+  let currentLink: Link;
+  let testData: TestEntity['data'];
+  let state: BaseState<TestEntity>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    // Setup test data
+    testData = {
+      id: '123',
+      name: 'Test Resource',
+    };
+
+    currentLink = {
+      rel: 'self',
+      href: '/api/resources/123',
+      context: mockClient.bookmarkUri,
+    };
+
+    mockLinks = new Links<TestEntity['links']>(mockClient.bookmarkUri, [
+      {
+        rel: 'self',
+        href: '/api/resources/123',
+      },
+      {
+        rel: 'related',
+        href: '/api/resources/124',
+      },
+      {
+        rel: 'edit',
+        href: '/api/resources/123/edit',
+      },
+    ]);
+
+    mockHeaders = new Headers({
+      'Content-Type': 'application/json',
+      'Content-Language': 'en',
+      ETag: '"abc123"',
+      'Cache-Control': 'max-age=3600',
+      Expires: 'Wed, 21 Oct 2025 07:28:00 GMT',
+    });
+
+    mockForms = [
+      {
+        uri: '/api/resources/123/edit',
+        name: 'edit',
+        method: 'PUT',
+        contentType: 'application/json',
+        fields: [],
+      },
+      {
+        uri: '/api/resources/123/delete',
+        name: 'delete',
+        method: 'DELETE',
+        contentType: 'application/json',
+        fields: [],
+      },
+    ];
+
+    state = new BaseState<TestEntity>({
+      client: mockClient,
+      data: testData,
+      links: mockLinks,
+      headers: mockHeaders,
+      currentLink,
+      forms: mockForms,
+    });
+  });
+
+  describe('constructor and basic properties', () => {
+    it('should initialize with correct properties', () => {
+      expect(state.uri).toBe('https://example.com/api/resources/123');
+      expect(state.client).toBe(mockClient);
+      expect(state.data).toEqual(testData);
+      expect(state.links).toBe(mockLinks);
+      expect(state.timestamp).toBeLessThanOrEqual(Date.now());
+      expect(state.collection).toEqual([]);
+    });
+
+    it('should accept collection parameter', () => {
+      const mockCollection = [
+        state,
+        state,
+      ] as unknown as StateCollection<TestEntity>;
+      const stateWithCollection = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+        collection: mockCollection,
+      });
+
+      expect(stateWithCollection.collection).toEqual(mockCollection);
+    });
+
+    it('should initialize with empty forms array if not provided', () => {
+      const stateWithoutForms = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      expect(stateWithoutForms['forms']).toEqual([]);
+    });
+
+
+  });
+
+  describe('hasLink', () => {
+    it('should return true for existing links', () => {
+      expect(state.hasLink('self')).toBe(true);
+      expect(state.hasLink('related')).toBe(true);
+      expect(state.hasLink('edit')).toBe(true);
+    });
+
+    it('should return false for non-existing links', () => {
+      expect(state.hasLink('prev' as never)).toBe(false);
+      expect(state.hasLink('unknown' as never)).toBe(false);
+    });
+  });
+
+  describe('getLink', () => {
+    it('should return the link for existing rel', () => {
+      const selfLink = state.getLink('self');
+      expect(selfLink).toBeDefined();
+      expect(selfLink?.href).toBe('/api/resources/123');
+
+      const relatedLink = state.getLink('related');
+      expect(relatedLink).toBeDefined();
+      expect(relatedLink?.href).toBe('/api/resources/124');
+    });
+
+    it('should return undefined for non-existing rel', () => {
+      const unknownLink = state.getLink('unknown' as never);
+      expect(unknownLink).toBeUndefined();
+    });
+  });
+
+  describe('equalTo', () => {
+    it('should return true when the other state has the same uri', () => {
+      const sameUriState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      expect(state.equalTo(sameUriState as unknown as State<SafeAny>)).toBe(
+        true,
+      );
+    });
+
+    it('should return false when the other state has a different uri', () => {
+      const differentUriState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink: {
+          rel: 'self',
+          href: '/api/resources/124',
+          context: mockClient.bookmarkUri,
+        },
+      });
+
+      expect(
+        state.equalTo(differentUriState as unknown as State<SafeAny>),
+      ).toBe(false);
+    });
+  });
+
+  describe('serializeBody', () => {
+    it('should return string directly if data is a string', () => {
+      const stringData = 'plain text content' as unknown as TestEntity['data'];
+      const stringState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: stringData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      expect(stringState.serializeBody()).toBe('plain text content');
+    });
+
+    it('should return data directly if it is a Buffer', () => {
+      const buffer = Buffer.from(
+        'buffer content',
+      ) as unknown as TestEntity['data'];
+      const bufferState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: buffer,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      expect(bufferState.serializeBody()).toBe(buffer);
+    });
+
+    it('should return data directly if it is a Blob', () => {
+      const blob = new Blob(['blob content']) as unknown as TestEntity['data'];
+      const blobState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: blob,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      expect(blobState.serializeBody()).toBe(blob);
+    });
+
+    it('should JSON stringify object data', () => {
+      const serialized = state.serializeBody() as string;
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed).toEqual(testData);
+    });
+
+    it('should handle complex nested objects', () => {
+      const complexData = {
+        id: '123',
+        nested: {
+          field1: 'value1',
+          field2: [1, 2, 3],
+        },
+      } as unknown as TestEntity['data'];
+
+      const complexState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: complexData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      const serialized = complexState.serializeBody() as string;
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed).toEqual(complexData);
+    });
+  });
+
+  describe('contentHeaders', () => {
+    it('should filter entity headers from response headers', () => {
+      const contentHeaders = state.contentHeaders();
+
+      expect(contentHeaders).toBeInstanceOf(Headers);
+      expect(contentHeaders.get('Content-Type')).toBe('application/json');
+      expect(contentHeaders.get('Content-Language')).toBe('en');
+      expect(contentHeaders.get('ETag')).toBe('"abc123"');
+      expect(contentHeaders.get('Expires')).toBe(
+        'Wed, 21 Oct 2025 07:28:00 GMT',
+      );
+    });
+
+    it('should not include non-entity headers', () => {
+      const contentHeaders = state.contentHeaders();
+
+      expect(contentHeaders.get('Cache-Control')).toBeNull();
+    });
+
+    it('should return empty Headers if no entity headers exist', () => {
+      const emptyHeaders = new Headers();
+      const stateWithEmptyHeaders = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: emptyHeaders,
+        currentLink,
+      });
+
+      const contentHeaders = stateWithEmptyHeaders.contentHeaders();
+      expect([...contentHeaders.entries()].length).toBe(0);
+    });
+
+    it('should include all entity header names', () => {
+      const allHeaders = new Headers({
+        'Content-Type': 'application/json',
+        'Content-Language': 'en',
+        'Content-Location': '/api/resource/123',
+        Deprecation: 'true',
+        ETag: '"abc123"',
+        Expires: 'Wed, 21 Oct 2025 07:28:00 GMT',
+        'Last-Modified': 'Mon, 15 Sep 2024 12:00:00 GMT',
+        Sunset: 'Wed, 21 Oct 2026 07:28:00 GMT',
+        Title: 'API Resource',
+        Warning: '299 - "Deprecated"',
+      });
+
+      const stateWithAllHeaders = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: allHeaders,
+        currentLink,
+      });
+
+      const contentHeaders = stateWithAllHeaders.contentHeaders();
+      expect([...contentHeaders.entries()].length).toBe(10);
+    });
+  });
+
+  describe('follow', () => {
+    it('should call client.go with the correct link and forms', () => {
+      state.follow('edit');
+
+      expect(mockClient.go).toHaveBeenCalledWith(mockLinks.get('edit'));
+    });
+
+    it('should throw error if link does not exist', () => {
+      expect(() => state.follow('unknown' as never)).toThrow(LinkNotFound);
+      expect(() => state.follow('unknown' as never)).toThrow(
+        'Link with rel unknown on https://example.com/api/resources/123 not found',
+      );
+    });
+
+    it('should return the result from client.go', () => {
+      const mockResource = {} as never;
+      vi.mocked(mockClient.go).mockReturnValue(mockResource);
+
+      const result = state.follow('edit');
+
+      expect(result).toBe(mockResource);
+    });
+
+    it('should warn when following a deprecated link', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {
+        // noop
+      });
+      const deprecatedState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: new Links<TestEntity['links']>(mockClient.bookmarkUri, [
+          {
+            rel: 'edit',
+            href: '/api/resources/123/edit',
+            hints: { status: 'deprecated' } as never,
+          },
+        ]),
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      deprecatedState.follow('edit');
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[Resource] The edit link on https://example.com/api/resources/123 is marked deprecated.',
+        expect.objectContaining({ rel: 'edit' }),
+      );
+      warnSpy.mockRestore();
+    });
+
+    describe('pagination links with collection', () => {
+      type CollectionEntity = Entity<
+        { id: string },
+        {
+          self: CollectionEntity;
+          first: CollectionEntity;
+          last: CollectionEntity;
+          prev: CollectionEntity;
+          next: CollectionEntity;
+          item: CollectionEntity;
+        }
+      >;
+
+      let collectionLinks: Links<CollectionEntity['links']>;
+      let collectionState: BaseState<CollectionEntity>;
+      let mockCollection: StateCollection<CollectionEntity>;
+
+      beforeEach(() => {
+        mockCollection = [
+          new BaseState<CollectionEntity>({
+            client: mockClient,
+            data: { id: '1' },
+            links: mockLinks as SafeAny,
+            headers: mockHeaders,
+            currentLink: {
+              rel: 'item',
+              href: '/api/items/1',
+              context: mockClient.bookmarkUri,
+            },
+          }),
+        ] as unknown as StateCollection<CollectionEntity>;
+
+        collectionLinks = new Links<CollectionEntity['links']>(
+          mockClient.bookmarkUri,
+          [
+            { rel: 'self', href: '/api/items?page=1' },
+            { rel: 'first', href: '/api/items?page=1' },
+            { rel: 'last', href: '/api/items?page=10' },
+            { rel: 'prev', href: '/api/items?page=2' },
+            { rel: 'next', href: '/api/items?page=2' },
+            { rel: 'item', href: '/api/items/1' },
+          ],
+        );
+
+        collectionState = new BaseState<CollectionEntity>({
+          client: mockClient,
+          data: { id: '1' },
+          links: collectionLinks,
+          headers: mockHeaders,
+          currentLink: {
+            rel: 'item',
+            href: '/api/items/1',
+            context: mockClient.bookmarkUri,
+          },
+          collection: mockCollection,
+        });
+      });
+
+      it('should replace rel with currentLink.rel for "self" when collection has items', () => {
+        collectionState.follow('self');
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const expectedLink = { ...collectionLinks.get('self')!, rel: 'item' };
+        expect(mockClient.go).toHaveBeenCalledWith(expectedLink);
+      });
+
+      it('should replace rel with currentLink.rel for "first" when collection has items', () => {
+        collectionState.follow('first');
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const expectedLink = { ...collectionLinks.get('first')!, rel: 'item' };
+        expect(mockClient.go).toHaveBeenCalledWith(expectedLink);
+      });
+
+      it('should replace rel with currentLink.rel for "last" when collection has items', () => {
+        collectionState.follow('last');
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const expectedLink = { ...collectionLinks.get('last')!, rel: 'item' };
+        expect(mockClient.go).toHaveBeenCalledWith(expectedLink);
+      });
+
+      it('should replace rel with currentLink.rel for "prev" when collection has items', () => {
+        collectionState.follow('prev');
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const expectedLink = { ...collectionLinks.get('prev')!, rel: 'item' };
+        expect(mockClient.go).toHaveBeenCalledWith(expectedLink);
+      });
+
+      it('should replace rel with currentLink.rel for "next" when collection has items', () => {
+        collectionState.follow('next');
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const expectedLink = { ...collectionLinks.get('next')!, rel: 'item' };
+        expect(mockClient.go).toHaveBeenCalledWith(expectedLink);
+      });
+
+      it('should not replace rel for non-pagination links even when collection has items', () => {
+        collectionState.follow('item');
+
+        expect(mockClient.go).toHaveBeenCalledWith(
+          collectionLinks.get('item'),
+        );
+      });
+
+      it('should not replace rel for pagination links when collection is empty', () => {
+        const emptyCollectionState = new BaseState<CollectionEntity>({
+          client: mockClient,
+          data: { id: '1' },
+          links: collectionLinks,
+          headers: mockHeaders,
+          currentLink: {
+            rel: 'item',
+            href: '/api/items/1',
+            context: mockClient.bookmarkUri,
+          },
+          collection: [],
+        });
+
+        emptyCollectionState.follow('self');
+
+        expect(mockClient.go).toHaveBeenCalledWith(
+          collectionLinks.get('self'),
+        );
+      });
+    });
+  });
+
+  describe('followAll', () => {
+    it('should follow all links for a relation', () => {
+      const multiLinks = new Links<TestEntity['links']>(mockClient.bookmarkUri, [
+        { rel: 'edit', href: '/api/test/123/edit-a' },
+        { rel: 'edit', href: '/api/test/123/edit-b' },
+      ]);
+      const multiState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: multiLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      multiState.followAll('edit');
+
+      expect(mockClient.go).toHaveBeenCalledTimes(2);
+      expect(mockClient.go).toHaveBeenNthCalledWith(1, {
+        rel: 'edit',
+        href: '/api/test/123/edit-a',
+        context: mockClient.bookmarkUri,
+      });
+      expect(mockClient.go).toHaveBeenNthCalledWith(2, {
+        rel: 'edit',
+        href: '/api/test/123/edit-b',
+        context: mockClient.bookmarkUri,
+      });
+    });
+
+    it('should return empty array when relation does not exist', () => {
+      const result = state.followAll('unknown' as never);
+      expect(result).toEqual([]);
+      expect(mockClient.go).not.toHaveBeenCalled();
+    });
+
+    it('should warn when following deprecated links', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {
+        // noop
+      });
+      const deprecatedLinks = new Links<TestEntity['links']>(
+        mockClient.bookmarkUri,
+        [
+          {
+            rel: 'related',
+            href: '/api/resources/124',
+            hints: { status: 'deprecated' } as never,
+          },
+        ],
+      );
+      const deprecatedState = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: deprecatedLinks,
+        headers: mockHeaders,
+        currentLink,
+      });
+
+      deprecatedState.followAll('related');
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[Resource] The related link on https://example.com/api/resources/123 is marked deprecated.',
+        expect.objectContaining({ rel: 'related' }),
+      );
+      warnSpy.mockRestore();
+    });
+  });
+
+
+  describe('action', () => {
+    it('should return action for existing action name', () => {
+      const action = state.action('edit' as never);
+
+      expect(action).toBeDefined();
+      expect(action.name).toBe('edit');
+      expect(action.method).toBe('PUT');
+    });
+
+    it('should throw ActionNotFound for non-existing action name', () => {
+      expect(() => state.action('nonexistent' as never)).toThrow(
+        'This State defines no action with name nonexistent',
+      );
+    });
+
+    it('should throw ActionNotFound when no actions exist', () => {
+      const stateWithoutForms = new BaseState<TestEntity>({
+        client: mockClient,
+        data: testData,
+        links: mockLinks,
+        headers: mockHeaders,
+        currentLink,
+        forms: [],
+      });
+
+      expect(() => stateWithoutForms.action('any' as never)).toThrow(
+        'This State does not define any actions',
+      );
+    });
+
+    it('should return first action when name is undefined', () => {
+      const action = state.action(undefined as never);
+
+      expect(action).toBeDefined();
+      expect(action.name).toBe('edit');
+    });
+  });
+
+  describe('clone', () => {
+    it('should create a new State instance', () => {
+      const cloned = state.clone();
+
+      expect(cloned).toBeInstanceOf(BaseState);
+      expect(cloned).not.toBe(state);
+    });
+
+    it('should have the same uri', () => {
+      const cloned = state.clone();
+      expect(cloned.uri).toEqual(state.uri);
+    });
+
+    it('should have the same data', () => {
+      const cloned = state.clone();
+      expect(cloned.data).toEqual(state.data);
+    });
+
+    it('should reference the same data object (shallow clone)', () => {
+      const cloned = state.clone();
+      expect(cloned.data).toBe(state.data);
+    });
+
+    it('should have the same timestamp', () => {
+      const cloned = state.clone();
+      expect(cloned.timestamp).toBe(state.timestamp);
+    });
+  });
+});

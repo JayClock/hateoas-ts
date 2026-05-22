@@ -1,0 +1,247 @@
+import { describe, expect, vi } from 'vitest';
+import { User } from '../fixtures/interface.js';
+import halUser from '../fixtures/hal-user.json' with { type: 'json' };
+import { Link } from '../../lib/links/link.js';
+import { Resource, State } from '../../lib/index.js';
+import { resolve } from '../../lib/util/uri.js';
+import { clearAllMocks, mockClient, setupUserState } from './mock-setup.js';
+
+describe('Resource POST Requests', () => {
+  let userState: State<User>;
+  const newConversationData = { title: 'New Test Conversation' };
+
+  beforeAll(async () => {
+    const setup = await setupUserState();
+    userState = setup.userState;
+    expect(userState).toBeDefined();
+  });
+
+  beforeEach(async () => {
+    clearAllMocks();
+  });
+
+  it('should send POST request with custom headers and not cache state', async () => {
+    const link: Link = {
+      ...halUser._links['conversations'],
+      context: mockClient.bookmarkUri,
+      rel: 'conversations',
+    };
+
+    const createdConversation = {
+      id: 'conv-new',
+      title: 'New Test Conversation',
+      _links: {
+        self: {
+          href: '/api/conversations/conv-new',
+        },
+        user: {
+          href: '/api/users/1',
+        },
+      },
+    };
+
+    const mockResponse = {
+      url: resolve(link).toString(),
+      json: vi.fn().mockResolvedValue(createdConversation),
+    } as unknown as Response;
+
+    const options: RequestInit = {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify(newConversationData),
+    };
+
+    vi.spyOn(mockClient, 'go').mockReturnValue(
+      new Resource(mockClient, link),
+    );
+    vi.spyOn(mockClient.fetcher, 'fetchOrThrow').mockResolvedValue(
+      mockResponse,
+    );
+    vi.spyOn(mockClient.cache, 'get').mockReturnValue(userState);
+
+    const form = userState.action('create-conversation');
+
+    await form.submit(newConversationData);
+
+    expect(form?.uri).toEqual(
+      'https://www.test.com/api/users/1/conversations',
+    );
+    expect(form?.method).toEqual(
+      halUser._templates['create-conversation'].method,
+    );
+
+    expect(mockClient.fetcher.fetchOrThrow).toHaveBeenCalledWith(
+      'https://www.test.com/api/users/1/conversations',
+      options,
+    );
+
+    expect(mockClient.cacheState).toHaveBeenCalledTimes(0);
+  });
+
+  describe('activeRefresh', () => {
+    const link: Link = {
+      ...halUser._links['conversations'],
+      context: mockClient.bookmarkUri,
+      rel: 'conversations',
+    };
+
+    const mockResponse = {
+      json: vi.fn().mockResolvedValue({
+        id: 'conv-new',
+        title: 'New Test Conversation',
+        _links: {
+          self: {
+            href: '/api/conversations/conv-new',
+          },
+        },
+      }),
+    } as unknown as Response;
+
+    beforeEach(() => {
+      vi.restoreAllMocks();
+      vi.spyOn(mockClient, 'go').mockReturnValue(
+        new Resource(mockClient, link),
+      );
+      vi.spyOn(mockClient.fetcher, 'fetchOrThrow').mockResolvedValue(
+        mockResponse,
+      );
+    });
+
+    it('should de-duplicate identical POST requests with dedup=true', async () => {
+      vi.spyOn(mockClient, 'getStateForResponse').mockResolvedValue({
+        uri: 'https://www.test.com/api/users/1/conversations',
+      } as State);
+
+      const request1 = userState
+        .follow('create-conversation')
+        .post({
+          data: newConversationData,
+        }, { dedup: true });
+
+      const request2 = userState
+        .follow('create-conversation')
+        .post({
+          data: newConversationData,
+        }, { dedup: true });
+
+      const [result1, result2] = await Promise.all([request1, request2]);
+
+      expect(result1).toBe(result2);
+
+      expect(mockClient.fetcher.fetchOrThrow).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not de-duplicate POST requests with dedup=false', async () => {
+      vi.spyOn(mockClient, 'getStateForResponse').mockResolvedValue({
+        uri: 'https://www.test.com/api/users/1/conversations',
+      } as State);
+
+      const request1 = userState
+        .follow('create-conversation')
+        .post({
+          data: newConversationData,
+        });
+
+      const request2 = userState
+        .follow('create-conversation')
+        .post({
+          data: newConversationData,
+        });
+
+      await Promise.all([request1, request2]);
+
+      expect(mockClient.fetcher.fetchOrThrow).toHaveBeenCalledTimes(2);
+    });
+
+    it('should de-duplicate only POST requests with same data', async () => {
+      vi.spyOn(mockClient, 'getStateForResponse').mockResolvedValue({
+        uri: 'https://www.test.com/api/users/1/conversations',
+      } as State);
+
+      const request1 = userState
+        .follow('create-conversation')
+        .post({
+          data: newConversationData,
+        }, { dedup: true });
+
+      const request2 = userState
+        .follow('create-conversation')
+        .post({
+          data: { title: 'Different Conversation' },
+        }, { dedup: true });
+
+      await Promise.all([request1, request2]);
+
+      expect(mockClient.fetcher.fetchOrThrow).toHaveBeenCalledTimes(2);
+    });
+
+    it('should clean up activeRefresh after POST request completes', async () => {
+      vi.spyOn(mockClient, 'getStateForResponse').mockResolvedValue({
+        uri: 'https://www.test.com/api/users/1/conversations',
+      } as State);
+      const resource = userState.follow('conversations');
+
+      const requestPromise = resource.post({
+        data: newConversationData,
+      }, { dedup: true });
+
+      await requestPromise;
+
+      const secondRequest = resource.post({
+        data: newConversationData,
+      }, { dedup: true });
+      await secondRequest;
+
+      expect(mockClient.fetcher.fetchOrThrow).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('postFollow', () => {
+    it('should follow Location when response status is 201', async () => {
+      const createdResource = new Resource(mockClient, {
+        rel: '',
+        href: '/api/conversations/created',
+        context: mockClient.bookmarkUri,
+      });
+      vi.spyOn(mockClient.fetcher, 'fetchOrThrow').mockResolvedValue(
+        new Response(null, {
+          status: 201,
+          headers: new Headers({
+            Location: '/api/conversations/created',
+          }),
+        }),
+      );
+      vi.spyOn(mockClient, 'go').mockReturnValue(createdResource);
+      vi.spyOn(mockClient.cache, 'get').mockReturnValue(userState);
+
+      const nextResource = await userState.follow('conversations').postFollow({
+        data: newConversationData,
+      });
+
+      expect(mockClient.go).toHaveBeenCalledWith(
+        'https://www.test.com/api/conversations/created',
+      );
+      expect(nextResource).toBe(createdResource);
+    });
+
+    it('should return current resource on 204/205', async () => {
+      vi.spyOn(mockClient.cache, 'get').mockReturnValue(userState);
+      vi.spyOn(mockClient.fetcher, 'fetchOrThrow')
+        .mockResolvedValueOnce(new Response(null, { status: 204 }))
+        .mockResolvedValueOnce(new Response(null, { status: 205 }));
+
+      const rel = userState.follow('conversations');
+      const resource204 = await rel.postFollow({
+        data: newConversationData,
+      });
+      const resource205 = await rel.postFollow({
+        data: newConversationData,
+      });
+
+      expect(resource204).toBeInstanceOf(Resource);
+      expect(resource205).toBeInstanceOf(Resource);
+    });
+  });
+});

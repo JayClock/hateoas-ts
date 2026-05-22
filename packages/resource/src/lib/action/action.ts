@@ -1,0 +1,304 @@
+import { Form } from '../form/form.js';
+import { Entity } from '../archtype/entity.js';
+import { State } from '../state/state.js';
+import { Field } from '../form/field.js';
+import { SafeAny } from '../archtype/safe-any.js';
+import { ClientInstance } from '../client-instance.js';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import * as qs from 'querystring';
+
+const toPathSegment = (
+  entry: PropertyKey | StandardSchemaV1.PathSegment,
+): string => {
+  if (typeof entry === 'object' && entry !== null && 'key' in entry) {
+    return String(entry.key);
+  }
+  return String(entry);
+};
+
+const formatValidationMessage = (
+  issues: readonly StandardSchemaV1.Issue[],
+): string => {
+  if (issues.length === 0) {
+    return 'Action payload validation failed.';
+  }
+
+  const [firstIssue] = issues;
+  const path =
+    firstIssue.path && firstIssue.path.length > 0
+      ? firstIssue.path.map((entry) => toPathSegment(entry)).join('.')
+      : undefined;
+  const prefix = path ? `${path}: ` : '';
+
+  if (issues.length === 1) {
+    return `${prefix}${firstIssue.message}`;
+  }
+
+  return `${prefix}${firstIssue.message} (+${issues.length - 1} more)`;
+};
+
+
+/**
+ * Represents an executable hypermedia action (form submission).
+ *
+ * Actions are discovered from HAL-Forms templates and enable HATEOAS-driven
+ * state transitions. They encapsulate the HTTP method, target URI, content
+ * type, and available form fields.
+ *
+ * @typeParam TEntity - The expected entity type of the response
+ *
+ * @example
+ * ```typescript
+ * // Discover and execute an action
+ * if (state.hasActionFor('create-post')) {
+ *   const action = state.actionFor('create-post');
+ *
+ *   // Check available fields
+ *   const titleField = action.field('title');
+ *   console.log(titleField?.required);
+ *
+ *   // Submit the action
+ *   const result = await action.submit({
+ *     title: 'Hello World',
+ *     content: 'My first post'
+ *   });
+ * }
+ * ```
+ *
+ * @see {@link State.actionFor} for discovering actions
+ * @see {@link Form} for the underlying form structure
+ *
+ * @category Resource
+ */
+export interface Action<TEntity extends Entity> extends Form {
+  /**
+   * Executes the action by submitting form data.
+   *
+   * @param formData - Key-value pairs for form fields
+   * @returns A Promise resolving to the response state
+   * @throws {@link HttpError} When the server returns an error response
+   */
+  submit(formData: Record<string, SafeAny>): Promise<State<TEntity>>;
+
+  /**
+   * Retrieves a form field by name.
+   *
+   * @param name - The field name
+   * @returns The Field object or `undefined` if not found
+   */
+  field(name: string): Field | undefined;
+
+  /**
+   * Schema generated from form fields.
+   *
+   * Uses the Standard Schema interface so validation engines are pluggable.
+   */
+  formSchema: ActionFormSchema;
+}
+
+export type ActionFormSchema = StandardSchemaV1<
+  Record<string, SafeAny>,
+  Record<string, SafeAny>
+>;
+
+/**
+ * Plugin interface for generating action form schemas.
+ */
+export interface SchemaPlugin {
+  createSchema(fields: Field[]): ActionFormSchema;
+}
+
+export type ActionSchemaPlugin = SchemaPlugin;
+
+/**
+ * Default schema plugin with no validation.
+ *
+ * If you need runtime validation, pass a custom plugin (e.g. zod plugin).
+ */
+export const defaultSchemaPlugin: SchemaPlugin = {
+  createSchema(fields: Field[]): ActionFormSchema {
+    void fields;
+    return {
+      '~standard': {
+        version: 1,
+        vendor: 'hateoas-resource-noop',
+        validate(value) {
+          return { value: value as Record<string, SafeAny> };
+        },
+      },
+    };
+  },
+};
+
+export const standardActionSchemaPlugin = defaultSchemaPlugin;
+
+/**
+ * Default implementation of the Action interface.
+ *
+ * Handles form submission with support for `application/json` and
+ * `application/x-www-form-urlencoded` content types.
+ *
+ * @typeParam TEntity - The expected entity type of the response
+ * @internal
+ * @category Resource
+ */
+
+export class SimpleAction<TEntity extends Entity> implements Action<TEntity> {
+  uri: string;
+  name: string;
+  title?: string | undefined;
+  method: string;
+  contentType: string;
+  fields: Field[];
+  extensions?: Record<string, unknown>;
+  formSchema: ActionFormSchema;
+
+  constructor(
+    private client: ClientInstance,
+    private form: Form,
+    schemaPlugin: SchemaPlugin = defaultSchemaPlugin,
+  ) {
+    this.uri = this.form.uri;
+    this.name = this.form.name;
+    this.title = this.form.title;
+    this.method = this.form.method;
+    this.contentType = this.form.contentType;
+    this.fields = this.form.fields;
+    this.extensions = this.form.extensions;
+    this.formSchema = schemaPlugin.createSchema(this.fields);
+  }
+
+  field(name: string): Field | undefined {
+    return this.fields.find((field) => field.name === name);
+  }
+
+  private hasOwn(data: Record<string, SafeAny>, key: string): boolean {
+    return Object.prototype.hasOwnProperty.call(data, key);
+  }
+
+  private getValueFromPath(
+    data: Record<string, SafeAny>,
+    path: string,
+  ): SafeAny | undefined {
+    const parts = path.split('.').filter(Boolean);
+    if (parts.length === 0) return undefined;
+
+    let current: unknown = data;
+    for (const part of parts) {
+      if (current === null || current === undefined) return undefined;
+      if (Array.isArray(current)) {
+        const index = Number(part);
+        if (!Number.isInteger(index)) return undefined;
+        current = current[index];
+        continue;
+      }
+      if (typeof current !== 'object') return undefined;
+      current = (current as Record<string, unknown>)[part];
+    }
+    return current as SafeAny;
+  }
+
+  private normalizeSubmitFormData(
+    formData: Record<string, SafeAny>,
+  ): Record<string, SafeAny> {
+    const payload: Record<string, SafeAny> = { ...formData };
+    const fieldNames = new Set(this.fields.map((field) => field.name));
+    const dottedRoots = new Set<string>();
+
+    for (const field of this.fields) {
+      if (!field.name.includes('.')) continue;
+      const root = field.name.split('.')[0];
+      dottedRoots.add(root);
+
+      if (this.hasOwn(payload, field.name)) continue;
+      const nestedValue = this.getValueFromPath(formData, field.name);
+      if (nestedValue !== undefined) {
+        payload[field.name] = nestedValue;
+      }
+    }
+
+    for (const root of dottedRoots) {
+      if (fieldNames.has(root) || !this.hasOwn(payload, root)) continue;
+      const value = payload[root];
+      if (
+        typeof value === 'object' &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        delete payload[root];
+      }
+    }
+
+    return payload;
+  }
+
+  async submit(formData: Record<string, SafeAny>): Promise<State<TEntity>> {
+    const submitFormData = this.normalizeSubmitFormData(formData);
+    const validationResult = await this.formSchema['~standard'].validate(submitFormData);
+    const validationIssues =
+      'issues' in validationResult ? validationResult.issues : undefined;
+    if (validationIssues && validationIssues.length > 0) {
+      throw new ActionValidationError(validationIssues);
+    }
+
+    const uri = new URL(this.uri, this.client.bookmarkUri);
+
+    if (this.method === 'GET') {
+      uri.search = qs.stringify(submitFormData);
+      const resource = this.client.go<TEntity>(uri.toString());
+      return resource.get();
+    }
+    let body;
+    switch (this.contentType) {
+      case 'application/x-www-form-urlencoded':
+        body = qs.stringify(submitFormData);
+        break;
+      case 'application/json':
+        body = JSON.stringify(submitFormData);
+        break;
+      default:
+        throw new Error(
+          `Serializing mimetype ${this.form.contentType} is not yet supported in actions`,
+        );
+    }
+    const response = await this.client.fetcher.fetchOrThrow(uri.toString(), {
+      method: this.method,
+      body,
+      headers: new Headers({
+        'Content-Type': this.contentType,
+      }),
+    });
+
+    return this.client.getStateForResponse(
+      { rel: '', href: uri.toString(), context: this.client.bookmarkUri },
+      response,
+    );
+  }
+}
+
+/**
+ * Error thrown when a requested action cannot be found.
+ *
+ * This occurs when calling `state.actionFor(rel)` with a link relation
+ * that has no associated HAL-Forms template.
+ *
+ * @category Resource
+ */
+export class ActionNotFound extends Error {
+  override name = 'ActionNotFound';
+}
+
+/**
+ * Error thrown when action payload validation fails before request dispatch.
+ *
+ * @category Resource
+ */
+export class ActionValidationError extends Error {
+  override name = 'ActionValidationError';
+  readonly issues: readonly StandardSchemaV1.Issue[];
+
+  constructor(issues: readonly StandardSchemaV1.Issue[]) {
+    super(formatValidationMessage(issues));
+    this.issues = issues;
+  }
+}

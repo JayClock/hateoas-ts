@@ -1,0 +1,51 @@
+{
+  "name": "@hateoas-ts/resource-react",
+  "version": "1.4.0",
+  "homepage": "https://jayclock.github.io/team-ai/resource-react/",
+  "type": "module",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "team-ai": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.es.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@hateoas-ts/resource": "workspace:*"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "16.3.0"
+  },
+  "nx": {
+    "targets": {
+      "docs": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "typedoc --options packages/resource-react/typedoc.json"
+        },
+        "dependsOn": [
+          "build"
+        ]
+      },
+      "docs:validate": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "typedoc --options packages/resource-react/typedoc.json --emit none"
+        },
+        "dependsOn": [
+          "build"
+        ]
+      }
+    }
+  }
+}

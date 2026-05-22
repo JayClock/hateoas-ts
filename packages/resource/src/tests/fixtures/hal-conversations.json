@@ -1,0 +1,1899 @@
+{
+  "_embedded": {
+    "conversations": [
+      {
+        "id": "2",
+        "title": "Conversation Item 2",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/2"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/2/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/2/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/2/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "3",
+        "title": "Conversation Item 3",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/3"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/3/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/3/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/3/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "4",
+        "title": "Conversation Item 4",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/4"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/4/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/4/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/4/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "5",
+        "title": "Conversation Item 5",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/5"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/5/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/5/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/5/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "6",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/6"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/6/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/6/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/6/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "7",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/7"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/7/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/7/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/7/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "8",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/8"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/8/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/8/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/8/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "9",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/9"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/9/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/9/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/9/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "10",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/10"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/10/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/10/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/10/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "11",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/11"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/11/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/11/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/11/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "12",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/12"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/12/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/12/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/12/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "13",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/13"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/13/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/13/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/13/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "14",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/14"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/14/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/14/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/14/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "15",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/15"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/15/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/15/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/15/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "16",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/16"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/16/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/16/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/16/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "17",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/17"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/17/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/17/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/17/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "18",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/18"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/18/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/18/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/18/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "19",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/19"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/19/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/19/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/19/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "20",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/20"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/20/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/20/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/20/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "21",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/21"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/21/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/21/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/21/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "22",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/22"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/22/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/22/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/22/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "23",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/23"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/23/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/23/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/23/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "24",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/24"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/24/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/24/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/24/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "25",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/25"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/25/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/25/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/25/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "26",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/26"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/26/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/26/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/26/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "27",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/27"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/27/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/27/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/27/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "28",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/28"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/28/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/28/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/28/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "29",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/29"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/29/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/29/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/29/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "30",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/30"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/30/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/30/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/30/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "31",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/31"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/31/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/31/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/31/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "32",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/32"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/32/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/32/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/32/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "33",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/33"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/33/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/33/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/33/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "34",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/34"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/34/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/34/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/34/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "35",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/35"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/35/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/35/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/35/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "36",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/36"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/36/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/36/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/36/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "37",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/37"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/37/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/37/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/37/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "38",
+        "title": "new title",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/38"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/38/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/38/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/38/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "39",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/39"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/39/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/39/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/39/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "40",
+        "title": "",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/40"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/40/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/40/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/40/messages/stream"
+          }
+        }
+      },
+      {
+        "id": "41",
+        "title": "new conversation",
+        "_links": {
+          "self": {
+            "href": "/api/users/1/conversations/41"
+          },
+          "chat": {
+            "href": "/api/users/1/conversations/41/messages/stream"
+          },
+          "messages": {
+            "href": "/api/users/1/conversations/41/messages"
+          }
+        },
+        "_templates": {
+          "delete-conversation": {
+            "method": "DELETE",
+            "properties": []
+          },
+          "default": {
+            "method": "PUT",
+            "properties": [
+              {
+                "name": "title",
+                "required": true,
+                "type": "text"
+              }
+            ]
+          },
+          "chat": {
+            "method": "POST",
+            "properties": [
+              {
+                "name": "content",
+                "readOnly": true,
+                "type": "text"
+              },
+              {
+                "name": "role",
+                "readOnly": true,
+                "type": "text"
+              }
+            ],
+            "target": "/api/users/1/conversations/41/messages/stream"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "/api/users/1/conversations?page=0"
+    },
+    "next": {
+      "href": "/api/users/1/conversations?page=1"
+    }
+  },
+  "page": {
+    "size": 40,
+    "totalElements": 62,
+    "totalPages": 2,
+    "number": 0
+  }
+}

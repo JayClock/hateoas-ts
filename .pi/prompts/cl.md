@@ -1,17 +1,16 @@
 ---
 description: Audit changelog entries before release
 ---
-Audit changelog entries for all commits since the last package release.
+Audit changelog entries for all commits since the last fixed-version release.
 
 ## Process
 
-1. **Find the last release tag for each package:**
+1. **Find the last fixed release tag:**
    ```bash
-   git tag --sort=-version:refname --list '@hateoas-ts/resource@*' | head -1
-   git tag --sort=-version:refname --list '@hateoas-ts/resource-react@*' | head -1
+   git tag --sort=-version:refname --list 'v*' | head -1
    ```
 
-2. **List commits since each tag:**
+2. **List package commits since that tag:**
    ```bash
    git log <tag>..HEAD --oneline -- packages/resource
    git log <tag>..HEAD --oneline -- packages/resource-react
@@ -31,7 +30,11 @@ Audit changelog entries for all commits since the last package release.
    - Changes in `@hateoas-ts/resource` that affect `@hateoas-ts/resource-react` users, hook behavior, installation, or peer/runtime compatibility should be duplicated or referenced in `packages/resource-react/CHANGELOG.md`.
    - Changes only needed for the React wrapper should not be duplicated to the core package unless the core API or runtime behavior changed.
 
-6. **Report and fix:**
+6. **Fixed-version rule:**
+   - `@hateoas-ts/resource` and `@hateoas-ts/resource-react` must be released together with the same version.
+   - Do not use `nx release --projects=...` for normal releases.
+
+7. **Report and fix:**
    - List commits with missing entries.
    - List entries that need cross-package duplication.
    - Add missing entries directly before release.

@@ -5,20 +5,21 @@ This workspace publishes two npm packages with Nx Release:
 - `@hateoas-ts/resource`
 - `@hateoas-ts/resource-react`
 
-Nx is configured for independent package releases and package-specific git tags:
+Nx is configured for fixed-version releases: both packages are always versioned, tagged, and published together.
+
+Release tags use:
 
 ```text
-{projectName}@{version}
+v{version}
 ```
 
-Examples:
+Example:
 
 ```text
-@hateoas-ts/resource@1.4.0
-@hateoas-ts/resource-react@1.4.0
+v1.4.1
 ```
 
-The historical `v*` tags are not used by the current release flow.
+Historical npm releases before the fixed-release setup are also represented by package-specific tags for changelog lookup and traceability.
 
 ## Backfilled npm release tags
 
@@ -57,7 +58,7 @@ git push origin $(git tag --list '@hateoas-ts/*')
 
 ## Changelog audit
 
-Before a release, use `.pi/prompts/cl.md` to audit changelog coverage for commits since the latest package tag.
+Before a release, use `.pi/prompts/cl.md` to audit changelog coverage for commits since the latest fixed-version tag.
 
 Package changelogs live at:
 
@@ -72,13 +73,7 @@ Preview a patch release for all packages:
 pnpm nx release patch --dry-run --skip-publish
 ```
 
-Preview a single package release:
-
-```bash
-pnpm nx release patch --projects=@hateoas-ts/resource --dry-run --skip-publish
-```
-
-Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of `patch` when appropriate.
+Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of `patch` when appropriate. Do not pass `--projects` for normal releases; both packages must keep the same version.
 
 ## Publish a new version
 

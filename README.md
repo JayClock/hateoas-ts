@@ -20,16 +20,15 @@ pnpm test
 
 See [RELEASE.md](./RELEASE.md) for the full release guide and historical tag mapping.
 
-This workspace uses `nx release` with independent package tags:
+This workspace uses `nx release` with fixed versioning, so `@hateoas-ts/resource` and `@hateoas-ts/resource-react` are always released together with the same version. Release tags use:
 
-- `@hateoas-ts/resource@<version>`
-- `@hateoas-ts/resource-react@<version>`
+- `v<version>`
 
 Before releasing, audit changelog coverage with `.pi/prompts/cl.md`, then inspect the `nx release --dry-run` changelog preview and edit any generated entries that need more user-facing wording.
 
 ### Backfilled historical release tags
 
-Historical npm releases are represented by package-specific git tags. The old `v*` tags are not used by the current release flow.
+Historical npm releases before the fixed-release setup are also represented by package-specific git tags. New releases use `v<version>` tags.
 
 ### Dry run
 
@@ -37,11 +36,7 @@ Historical npm releases are represented by package-specific git tags. The old `v
 pnpm nx release patch --dry-run --skip-publish
 ```
 
-Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of `patch` when needed. To release only one package:
-
-```bash
-pnpm nx release patch --projects=@hateoas-ts/resource --dry-run --skip-publish
-```
+Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of `patch` when needed. Do not release only one package; both packages should keep the same version.
 
 ### Publish
 

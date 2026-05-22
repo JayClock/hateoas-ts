@@ -77,9 +77,9 @@
   },
   "release": {
     "projects": ["packages/*"],
-    "projectsRelationship": "independent",
+    "projectsRelationship": "fixed",
     "releaseTag": {
-      "pattern": "{projectName}@{version}",
+      "pattern": "v{version}",
       "checkAllBranchesWhen": true
     },
     "git": {
@@ -95,6 +95,7 @@
       "updateDependents": "auto"
     },
     "changelog": {
+      "workspaceChangelog": false,
       "projectChangelogs": {
         "file": "{projectRoot}/CHANGELOG.md",
         "renderOptions": {

@@ -14,7 +14,7 @@
   "categoryOrder": ["Provider", "Hooks", "Suspense Hooks", "Types", "Other"],
   "navigationLinks": {
     "npm": "https://www.npmjs.com/package/@hateoas-ts/resource-react",
-    "GitHub": "https://github.com/JayClock/team-ai/tree/main/packages/resource-react"
+    "GitHub": "https://github.com/JayClock/hateoas-ts/tree/main/packages/resource-react"
   },
   "plugin": ["typedoc-plugin-mdn-links"],
   "validation": {

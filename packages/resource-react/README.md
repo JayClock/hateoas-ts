@@ -45,7 +45,7 @@ function UserProfile({ userId }: { userId: string }) {
 
 ## Documentation
 
-For complete API reference and usage examples, visit the **[Full Documentation](https://jayclock.github.io/team-ai/resource-react/)**.
+For complete API reference and usage examples, visit the **[Full Documentation](https://jayclock.github.io/hateoas-ts/resource-react/)**.
 
 ## Related
 

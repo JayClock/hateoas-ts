@@ -21,7 +21,7 @@
   ],
   "navigationLinks": {
     "npm": "https://www.npmjs.com/package/@hateoas-ts/resource",
-    "GitHub": "https://github.com/JayClock/team-ai/tree/main/packages/resource"
+    "GitHub": "https://github.com/JayClock/hateoas-ts/tree/main/packages/resource"
   },
   "plugin": ["typedoc-plugin-mdn-links"],
   "validation": {

@@ -24,10 +24,10 @@
     "dist",
     "!**/*.tsbuildinfo"
   ],
-  "homepage": "https://jayclock.github.io/team-ai/packages/resource/",
+  "homepage": "https://jayclock.github.io/hateoas-ts/resource/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JayClock/team-ai.git",
+    "url": "https://github.com/JayClock/hateoas-ts.git",
     "directory": "packages/resource"
   },
   "publishConfig": {
@@ -40,7 +40,6 @@
     "inversify": "^7.10.4",
     "query-string": "^9.3.1",
     "url-template": "^3.1.1",
-    "vitest": "4.0.15",
     "zod": "^4.3.6",
     "immer": "^11.1.4"
   },

@@ -32,16 +32,11 @@ const posts = await user.follow('posts').get();
 
 ## Documentation
 
-For complete API reference and usage examples, visit the **[Full Documentation](https://jayclock.github.io/team-ai/resource/)**.
+For complete API reference and usage examples, visit the **[Full Documentation](https://jayclock.github.io/hateoas-ts/resource/)**.
 
 ## React Integration
 
 See [@hateoas-ts/resource-react](../resource-react/README.md) for React hooks integration.
-
-## Related Documentation
-
-- [Smart Domain DDD Architecture](https://github.com/jayclock/team-ai/blob/main/libs/backend/README.md) - Backend architecture design
-- [REST Principles and Agentic UI](https://github.com/jayclock/team-ai/blob/main/public/REST_Principles_Agentic_UI.pdf) - REST architecture principles
 
 ## License
 

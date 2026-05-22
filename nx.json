@@ -77,8 +77,32 @@
   },
   "release": {
     "projects": ["packages/*"],
+    "projectsRelationship": "independent",
+    "releaseTag": {
+      "pattern": "{projectName}@{version}",
+      "checkAllBranchesWhen": true
+    },
+    "git": {
+      "commit": true,
+      "tag": true,
+      "push": false
+    },
     "version": {
-      "preVersionCommand": "npx nx run-many -t build"
+      "currentVersionResolver": "disk",
+      "fallbackCurrentVersionResolver": "disk",
+      "specifierSource": "prompt",
+      "preVersionCommand": "pnpm nx run-many -t lint test build",
+      "updateDependents": "auto"
+    },
+    "changelog": {
+      "projectChangelogs": {
+        "file": "{projectRoot}/CHANGELOG.md",
+        "renderOptions": {
+          "authors": false,
+          "commitReferences": true,
+          "versionTitleDate": true
+        }
+      }
     }
   }
 }

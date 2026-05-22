@@ -77,27 +77,33 @@ Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of 
 
 ## Publish a new version
 
-1. Ensure the working tree is clean and npm auth works:
+Publishing is performed by GitHub Actions when a `v*` tag is pushed. Do not publish from your local machine.
+
+Repository setup required once:
+
+1. Create an npm granular access token with read/write access to both packages:
+   - `@hateoas-ts/resource`
+   - `@hateoas-ts/resource-react`
+2. Add it to GitHub repository secrets as `NPM_TOKEN`.
+
+Release steps:
+
+1. Ensure the working tree is clean:
    ```bash
    git status --short
-   npm whoami
    ```
 2. Audit changelog entries with `.pi/prompts/cl.md`.
 3. Run a dry run:
    ```bash
    pnpm nx release patch --dry-run --skip-publish
    ```
-4. Create the release commit and tag(s), but skip publishing so you can inspect the result:
+4. Create the release commit and tag locally, but skip local publishing:
    ```bash
    pnpm nx release patch --skip-publish
    ```
-5. Push commit and tags:
+5. Push the release commit and tag. The tag push triggers `.github/workflows/publish.yml` and publishes both packages to npm:
    ```bash
    git push origin main --follow-tags
    ```
-6. Publish packages:
-   ```bash
-   pnpm nx release publish --access public
-   ```
 
-For a one-step local release, run `pnpm nx release patch` and answer the publish prompt after reviewing the generated changes. For npm 2FA, pass `--otp <code>` to the publish step.
+Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of `patch` when appropriate.

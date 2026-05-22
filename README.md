@@ -40,18 +40,13 @@ Use `minor`, `major`, `prerelease --preid beta`, or an exact version instead of 
 
 ### Publish
 
-1. Ensure the working tree is clean and npm auth is available (`npm whoami`).
-2. Run the release without publishing first if you want to inspect the version/changelog/tag commit:
+Publishing is done by GitHub Actions when a `v*` tag is pushed. Configure the repository secret `NPM_TOKEN` first.
+
+1. Create the release commit and tag locally, but skip local publishing:
    ```bash
    pnpm nx release patch --skip-publish
    ```
-3. Push the generated commit and tag(s):
+2. Push the generated commit and tag(s) to trigger `.github/workflows/publish.yml`:
    ```bash
    git push origin main --follow-tags
    ```
-4. Publish the versioned packages:
-   ```bash
-   pnpm nx release publish --access public
-   ```
-
-For a one-step local release, use `pnpm nx release patch` and answer the publish prompt after reviewing the generated changes.

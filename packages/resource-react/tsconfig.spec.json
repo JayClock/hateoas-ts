@@ -9,8 +9,7 @@
       "node",
       "vitest"
     ],
-    "jsx": "react-jsx",
-    "baseUrl": "."
+    "jsx": "react-jsx"
   },
   "include": [
     "vite.config.ts",

@@ -4,7 +4,7 @@
   "private": true,
   "description": "Nx workspace for the @hateoas-ts HATEOAS client packages.",
   "license": "MIT",
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@11.2.2",
   "scripts": {
     "build": "nx run-many -t build",
     "test": "nx run-many -t test",

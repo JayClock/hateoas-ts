@@ -1,3 +1,10 @@
+## 1.4.2 (2026-05-25)
+
+### Fixed
+
+- Fixed React package typechecking by relying on workspace path mappings from the shared TypeScript configuration.
+- Inherited the core package version-inlining fix so React users no longer hit runtime `package.json` lookup failures when `sendUserAgent` is enabled.
+
 ## 1.4.1 (2026-05-22)
 
 This was a version bump only for @hateoas-ts/resource-react to align it with other projects, there were no code changes.

@@ -1,3 +1,9 @@
+## 1.4.2 (2026-05-25)
+
+### Fixed
+
+- Inlined the package version in published bundles so the default `User-Agent` no longer depends on a runtime `package.json` lookup.
+
 ## 1.4.1 (2026-05-22)
 
 This was a version bump only for @hateoas-ts/resource to align it with other projects, there were no code changes.

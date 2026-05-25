@@ -1,6 +1,6 @@
 {
   "name": "@hateoas-ts/resource-react",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "homepage": "https://jayclock.github.io/hateoas-ts/resource-react/",
   "type": "module",
   "main": "./dist/index.cjs.js",

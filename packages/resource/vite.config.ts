@@ -1,10 +1,18 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
 import dts from 'vite-plugin-dts';
+
+const packageJson = JSON.parse(
+  readFileSync(resolve(__dirname, 'package.json'), 'utf-8'),
+) as { version: string };
 
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/packages/resource',
+  define: {
+    __HATEOAS_RESOURCE_VERSION__: JSON.stringify(packageJson.version),
+  },
   plugins: [
     dts({
       insertTypesEntry: true,

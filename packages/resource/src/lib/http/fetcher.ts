@@ -4,6 +4,10 @@ import { TYPES } from '../archtype/injection-types.js';
 import type { Config } from '../archtype/config.js';
 import { HttpTransport } from '../transport/transport.js';
 
+declare const __HATEOAS_RESOURCE_VERSION__: string;
+
+const RESOURCE_USER_AGENT = `Resource/${__HATEOAS_RESOURCE_VERSION__}`;
+
 /**
  * Middleware function for intercepting and modifying HTTP requests/responses.
  *
@@ -74,10 +78,7 @@ export class Fetcher {
         !innerRequest.headers.has('User-Agent') &&
         this.config.sendUserAgent
       ) {
-        innerRequest.headers.set(
-          'User-Agent',
-          'Resource/' + require('../../../package.json').version,
-        );
+        innerRequest.headers.set('User-Agent', RESOURCE_USER_AGENT);
       }
 
       return this.transport.execute(innerRequest);

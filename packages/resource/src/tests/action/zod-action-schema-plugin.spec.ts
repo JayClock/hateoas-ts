@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import * as z from 'zod';
 import { Field } from '../../lib/form/field.js';
 import type { ActionFormSchema } from '../../lib/action/action.js';
 import { zodSchemaPlugin } from '../../lib/action/zod-action-schema-plugin.js';
@@ -115,11 +116,26 @@ describe('zodSchemaPlugin', () => {
     ]);
 
     await expectSchemaValid(schema, { category: 'A' });
+    await expectSchemaInvalid(schema, { category: 'D' });
     await expectSchemaInvalid(schema, { category: 1 as unknown as string });
     await expectSchemaValid(schema, { category: 'A', tags: ['tag1', 'tag2'] });
     await expectSchemaInvalid(schema, {
       category: 'A',
+      tags: ['tag1', 'tag4'],
+    });
+    await expectSchemaInvalid(schema, {
+      category: 'A',
       tags: 'tag1' as unknown as string[],
+    });
+
+    const jsonSchema = z.toJSONSchema(schema as z.ZodType, {
+      target: 'draft-7',
+    });
+    expect(jsonSchema.properties?.category).toMatchObject({
+      enum: ['A', 'B', 'C'],
+    });
+    expect(jsonSchema.properties?.tags).toMatchObject({
+      items: { enum: ['tag1', 'tag2', 'tag3'] },
     });
   });
 

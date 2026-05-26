@@ -52,13 +52,20 @@ const createZodSchemaForField = (field: Field): z.ZodTypeAny => {
       schema = z.union([z.string(), z.number(), z.null(), z.boolean()]);
       break;
 
-    case 'select':
+    case 'select': {
+      const optionValues = getSelectOptionValues(field);
+      const itemSchema =
+        optionValues.length > 0
+          ? z.enum(optionValues as [string, ...string[]])
+          : z.string();
+
       if ('multiple' in field && field.multiple === true) {
-        schema = z.array(z.string());
+        schema = z.array(itemSchema);
       } else {
-        schema = z.string();
+        schema = itemSchema;
       }
       break;
+    }
 
     case 'text':
     case 'textarea':
@@ -83,6 +90,18 @@ const createZodSchemaForField = (field: Field): z.ZodTypeAny => {
   }
 
   return field.required ? schema : schema.optional();
+};
+
+const getSelectOptionValues = (field: Field): string[] => {
+  if (field.type !== 'select' || !('options' in field)) {
+    return [];
+  }
+
+  if (Array.isArray(field.options)) {
+    return field.options.map(String);
+  }
+
+  return Object.keys(field.options);
 };
 
 const createNode = (): FieldSchemaNode => ({

@@ -1,3 +1,7 @@
+## 1.4.3 (2026-05-26)
+
+This was a version bump only for @hateoas-ts/resource-react to align it with other projects, there were no code changes.
+
 ## 1.4.2 (2026-05-25)
 
 ### Fixed

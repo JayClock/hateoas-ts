@@ -1,3 +1,9 @@
+## 1.4.3 (2026-05-26)
+
+### 🩹 Fixes
+
+- **resource:** validate select action option values ([ce85642](https://github.com/JayClock/hateoas-ts/commit/ce85642))
+
 ## 1.4.2 (2026-05-25)
 
 ### Fixed
